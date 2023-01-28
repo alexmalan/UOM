@@ -1,0 +1,53 @@
+	How to write, compile, debug and run C programs on Linux
+	========================================================
+
+There are some prompts below, but you should add anything else you think
+will be useful.
+
+Useful sources of information
+=============================
+-gcc - GNU project C and C++ compiler
+
+- -g  Produce debugging information in the operating system's native format (stabs, COFF, XCOFF, or DWARF 2).  GDB can work with this debugging information.
+
+       On most systems that use stabs format, -g enables use of extra debugging information that only GDB can use; this extra information makes debugging work better in GDB but probably makes other debuggers crash or refuse to read the program.  If you want to control for certain whether to generate the extra information, use -gstabs+, -gstabs, -gxcoff+, -gxcoff, or -gvms (see below).
+
+       GCC allows you to use -g with -O.  The shortcuts taken by optimized code may occasionally produce surprising results: some variables you declared may not exist at all; flow of control may briefly move where you did not expect it; some statements may not be executed
+
+-std=c99 turns off certain features of GCC that are incompatible with ISO C99, such as the "asm" and "typeof" keywords, but not other GNU extensions that do not have a meaning in ISO C99, such as omitting the middle term of a "?:" expression.
+
+- -Wall is a Warning Option
+   This enables all the warnings about constructions that some users consider questionable, and that are easy to avoid (or modify to prevent the warning), even in conjunction with macros.  This also enables some language-specific warnings described in C++ Dialect Options and Objective-C and Objective-C++ Dialect Options.
+
+
+- -o file
+           Place output in file file.  This applies to whatever sort of output
+           is being produced, whether it be an executable file, an object
+           file, an assembler file or preprocessed C code.
+           If -o is not specified, the default is to put an executable file in
+           a.out, the object file for source.suffix in source.o, its assembler
+           file in source.s, a precompiled header file in source.suffix.gch,
+           and all preprocessed C source on standard output.
+
+Writing C programs
+==================
+Analizing the man 3 printf I found out useful stuff about printing in C but also some derivates of printf which I will use in my program(fprintf). 
+
+Compiling C programs
+====================
+I had some problems with Segmentation Fault error.
+Otherways no other important errors, most of them being typos
+
+
+Linking C programs
+==================
+
+
+Running C programs
+==================
+My program ran as planned
+
+Comparing output from C and Java programs
+=========================================
+The difference about the Java and C program is that in Java the mean had more decimals.
+

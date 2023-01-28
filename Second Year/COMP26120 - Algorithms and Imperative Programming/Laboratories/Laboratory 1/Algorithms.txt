@@ -1,0 +1,43 @@
+I choose Question D
+
+a)
+
+FIRST ALGORITHM
+
+we imput two numbers from the keyboard, knowing u > v
+while(u is different from v)
+    if u has a greater value than v 
+        we substract v from u and u gets this value
+    else
+        we substract u from v and v gets this value
+
+then we output v as being the GCD
+
+SECOND ALGORITHM
+
+we input two variables from the keyboard, knowing u > v
+we set the remainder of u divided by v
+while the remainder is not zero
+    u gets the value of v
+    v gets the value of the remainder
+    and the remainder gets the value of the new reminder of u divided by v
+then we output v as being the GCD
+
+b)
+The first algorithm is correct because in order to find the GCD of two numbers, you first have to substract them repeatetly, since they are equal, hat being the GCD
+e.g.: u = 36;
+      v = 12;
+      we perform u = 36-12 = 24
+                 u = 24-12 = 12 = v
+                 So the GCD is 12
+
+The second algorithm is correct because we can find the GCD more efficently using this one, as it uses less operations. So we set  reminder first and than we start divising the numbers and when the remainde is 0, that means that v is a divisor and actually the greatest common divisor
+e.g: u = 36;
+     v = 12;
+     we perform u = 36 % 12 = 0
+                So the GCD is 12
+    This also shows how much more efficent is the second algorithm.
+
+c)
+
+The SECOND ALGORITHM is the most efficient one because it uses less operations and that because division works faster than substraction. Meaning that u can be finished faster by divisioning it by v than substracting v of him.

@@ -1,0 +1,70 @@
+Compiler
+Interpreter
+Properties Compiler                                         BASICS
+Front/Back-End
+Compiler Structure
+
+-----------------------------------------------------------------------------
+Lexical Analysis <token, attr>
+Automated Lexical Analyser Construction
+RE
+-> NFA(Thompson's Construction)
+-> DFA(Subset Construction) - e-Closure/move
+-> Minimise DFA(Hopcroft's Algorithm)
+Regular Expressions
+Transition Table
+DFA/NFA Use + Difference
+Fast Scanners
+
+Syntax Analysis - Parsing
+Parse Trees
+Derivation - LeftMost/RightMost
+Ambiguity                                                 FRONT-END
+Top-Down Parser
+Left Recursion + Eliminating
+Predictive Parsing - LL(1) - Left Factoring
+Bottom-Up Parsing
+Sentential Form - Production - Position
+Shift Reduce Parser
+LR(1) Grammars
+Action/GoTO Table
+
+Context-Sensitive Analysis
+Attribute Grammars - Synthesised/Inherited
+Attribute Dependency Graph
+
+Intermediate Representation
+From Parsed -> Abstract Syntax Trees
+Directed Acyclic Graph(DAG)
+- Control Flow Graph
+- Data Dependency Graph
+- Call Graph
+3-Address Code
+Symbol Tables - Bucket/Linear Hashing <-
+--------------------------------------------------------------------------------
+
+Run-Time Storage Organisation
+Activation Records
+Establishing Addressability                                  OVERALL
+Access Links
+Global Display
+
+--------------------------------------------------------------------------------
+Instruction Selection
+Code Generation - Arithmetic Expressions
+
+Register Allocation
+- Local/Global
+Graph Colouring                                              BACK-END
+- Interference Graph
+Global Live Range - LIVEIN/OUT
+Chaitin-Briggs Register Allocation
+
+Instruction Scheduling
+Priority Function
+List Scheduling
+--------------------------------------------------------------------------------
+
+Code Optimisation
+Classifications                                           MIDDLEWARE
+Loop Transformation

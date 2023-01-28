@@ -1,0 +1,306 @@
+import requests
+import sys
+import re
+import xml.etree.ElementTree as ET
+import time
+
+def cleanhtml(a):
+	sterge = re.compile('<.*?>')
+	txt = re.sub(sterge, '', a)
+	return txt;
+#sending a req to the server
+def put_msg(s,t,h):
+  got = 0;
+  while got == 0:
+    req = requests.put(s, data = t, headers = h, timeout = 15)
+    x = req.content
+
+    if str(req).find("200") != -1:
+      got = 1
+    else:
+      print 'Compiling...'
+      time.sleep(5)
+  del req
+  return str(x);
+
+#receive a req from the server
+def get_msg(s):
+  got = 0
+  while(got == 0):
+    req = requests.get(s)
+    x = req.content
+    if(x.find("<code>") != -1):
+      got =1
+    else:
+      print 'Compiling...'
+      time.sleep(5)
+  del req
+	
+  return x;
+
+#calncelation
+def cancel_band():
+    id = "acc039"
+    password = "7DJ8vp"
+    slot_id = raw_input("Select slot:")
+        
+    XML = """<cancel>
+    <request_id>""" + str(req_id) + """</request_id>
+    <username>""" + id + """</username>
+    <password>""" + password + """</password>
+    <slot_id>""" + slot_id + """</slot_id>
+    </cancel>"""
+                        
+    h={"Content-type":'application/xml', "Accept":'application/xml'}
+                            
+    x = put_msg("http://jewel.cs.man.ac.uk:3020/queue/enqueue", XML, h)
+
+    root = ET.fromstring(x)
+    del x
+
+    temp2 = root.text + "?username="+ id+"&password="+ password
+    temp = get_msg(temp2)
+    
+    del root
+    root = ET.fromstring(temp)
+
+    print (root.find('body')).text    
+    return;
+
+def cancel_hotel():
+    id = "acc039"
+    password = "7DJ8vp"
+    slot_id = raw_input("Select slot:")
+        
+    XML = """<cancel>
+    <request_id>""" + str(req_id) + """</request_id>
+    <username>""" + id + """</username>
+    <password>""" + password + """</password>
+    <slot_id>""" + slot_id + """</slot_id>
+    </cancel>"""
+                        
+    h={"Content-type":'application/xml', "Accept":'application/xml'}
+                            
+    x = put_msg("http://jewel.cs.man.ac.uk:3010/queue/enqueue", XML, h)
+
+    root = ET.fromstring(x)
+    del x
+
+    temp2 = root.text + "?username="+ id+"&password="+ password
+    temp = get_msg(temp2)
+    
+    del root
+    root = ET.fromstring(temp)
+
+    print (root.find('body')).text    
+    return;
+
+#reservation
+def reserve_band():
+    id = "acc039"
+    password = "7DJ8vp"
+    slot_id = raw_input("Select slot:")
+        
+    XML = """<reserve>
+    <request_id>""" + str(req_id) + """</request_id>
+    <username>""" + id + """</username>
+    <password>""" + password + """</password>
+    <slot_id>""" + slot_id + """</slot_id>
+    </reserve>"""
+                        
+    h={"Content-type":'application/xml', "Accept":'application/xml'}
+                            
+    x = put_msg("http://jewel.cs.man.ac.uk:3020/queue/enqueue", XML, h)
+
+    root = ET.fromstring(x)
+    del x
+
+    temp2 = root.text + "?username="+ id+"&password="+ password
+    temp = get_msg(temp2)
+    
+    del root
+    root = ET.fromstring(temp)
+
+    print (root.find('body')).text    
+    return;
+
+def reserve_hotel():
+    id = "acc039"
+    password = "7DJ8vp"
+    slot_id = raw_input("Select slot:")
+        
+    XML = """<reserve>
+    <request_id>""" + str(req_id) + """</request_id>
+    <username>""" + id + """</username>
+    <password>""" + password + """</password>
+    <slot_id>""" + slot_id + """</slot_id>
+    </reserve>"""
+                        
+    h={"Content-type":'application/xml', "Accept":'application/xml'}
+                            
+    x = put_msg("http://jewel.cs.man.ac.uk:3010/queue/enqueue", XML, h)
+
+    root = ET.fromstring(x)
+    del x
+
+    temp2 = root.text + "?username="+ id+"&password="+ password
+    temp = get_msg(temp2)
+    
+    del root
+    root = ET.fromstring(temp)
+
+    print (root.find('body')).text    
+    return;
+
+#find free slots in band
+
+def free_band():
+    id = "acc039"
+    password = "7DJ8vp"
+    XML = """<availability>
+    <request_id>""" + str(req_id) + """</request_id>
+    <username>""" + id + """</username>
+    <password>""" + password + """</password>
+    </availability>"""
+
+    h = {"Content-type":'application/xml', "Accept":'application/xml'}
+    x = put_msg("http://jewel.cs.man.ac.uk:3020/booking/available", XML, h)
+    
+    x1 = cleanhtml(x)
+    x = x1.split()
+
+
+    print ''
+    print 'These are the available bands:'
+    print ''
+    for a  in x:
+      if a != 'Band' and a!= '-' and a != 'Available' and a!='Slot' and a!= 'Id' and a!= 'Slots'and a!= 'Hotel' :
+        print a,
+
+    print ''
+def free_hotel():
+    id = "acc039"
+    password = "7DJ8vp"
+    XML = """<availability>
+    <request_id>""" + str(req_id) + """</request_id>
+    <username>""" + id + """</username>
+    <password>""" + password + """</password>
+    </availability>"""
+
+    h = {"Content-type":'application/xml', "Accept":'application/xml'}
+    x = put_msg("http://jewel.cs.man.ac.uk:3010/booking/available", XML, h)
+    
+    x1 = cleanhtml(x)
+    x = x1.split()
+
+
+    print ''
+    print 'These are the available hotel rooms:'
+    print ''
+    for a  in x:
+      if a != 'Band' and a!= '-' and a != 'Available' and a!='Slot' and a!= 'Id' and a!= 'Slots' and a!= 'Hotel':
+        print a,
+    print ''
+
+req_id = int(time.time())
+
+def reserved_bands():
+  id = 'acc039'
+  password  = "7DJ8vp"
+
+  XML = """<bookings>
+  <request_id>""" + str(req_id) + """</request_id>
+  <username>""" + id + """</username>
+  <password>""" + password + """</password>
+  </bookings>"""
+
+  h = {"Content-type":'application/xml', "Accept":'application/xml'}
+  x = put_msg("http://jewel.cs.man.ac.uk:3020/queue/enqueue", XML, h)
+
+  k = 0
+
+  root = ET.fromstring(x)
+  del x
+
+  temp2 = root.text + "?username="+ id+"&password="+ password
+  temp = get_msg(temp2)
+    
+  del root
+  root = ET.fromstring(temp)
+
+  for slot_id in root.iter('slot_id'):
+    print slot_id.text 
+    k = k+ 1
+  if k == 0:
+    print "You haven't booked any band!"   
+  return;
+
+
+def reserved_rooms():
+  id = 'acc039'
+  password  = "7DJ8vp"
+
+  XML = """<bookings>
+  <request_id>""" + str(req_id) + """</request_id>
+  <username>""" + id + """</username>
+  <password>""" + password + """</password>
+  </bookings>"""
+
+  h = {"Content-type":'application/xml', "Accept":'application/xml'}
+  x = put_msg("http://jewel.cs.man.ac.uk:3010/queue/enqueue", XML, h)
+
+  k = 0
+
+  root = ET.fromstring(x)
+  del x
+
+  temp2 = root.text + "?username="+ id+"&password="+ password
+  temp = get_msg(temp2)
+    
+  del root
+  root = ET.fromstring(temp)
+
+  for slot_id in root.iter('slot_id'):
+    print slot_id.text 
+    k = k+ 1
+  if k == 0:
+    print "You haven't booked any room!"   
+  return;
+
+ok = 0
+print 'For band reservation options press 1, for hotel reservation options press 2'
+nr = input('Enter your choice:')
+while ok== 0:
+  if nr == 1:
+    print 'a) Reserve a band'
+    print 'b) Cancel a band reservation'
+    print 'c) View available bands'
+    print 'd) Your reservations'
+    print 'x) exit'
+  elif nr == 2:
+    print 'a) Reserve a hotel room'
+    print 'b) Cancel a hotel room reservation'
+    print 'c) View available hotel rooms'
+    print 'd) Your hotel room reservations'
+    print 'x) exit'
+  lit = raw_input('Enter your choice:')
+  if nr == 1 and lit == 'a':
+    reserve_band()
+  elif nr == 1 and lit == 'b': 
+    cancel_band()
+  elif nr == 1 and lit == 'c':
+    free_band()
+  elif nr == 1 and lit == 'd':
+    reserved_bands()
+  if nr == 2 and lit == 'a':
+    reserve_hotel()
+  elif nr == 2 and lit == 'b': 
+    cancel_hotel()
+  elif nr == 2 and lit == 'c':
+    free_hotel()
+  elif nr == 2 and lit == 'd':
+    reserved_rooms()
+  elif lit == 'x':
+    ok = 1
+  req_id = int(time.time())
+    

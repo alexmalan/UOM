@@ -1,0 +1,124 @@
+#!/bin/sh
+
+BIN=.
+WD=/tmp
+
+# calculate tf-idf for a (very small) collection of documents
+# jmcn 1996-2013
+
+echo 1>&2;
+echo 'This program calculates tf-idf for' 1>&2;
+echo 'index terms in a small collection of documents.' 1>&2;
+echo 1>&2;
+echo 'This program requires a filename as its only argument, containing' 1>&2;
+echo 'a list of filenames representing plain text documents to be processed.' 1>&2;
+echo 1>&2;
+
+if test -w ${WD}/$1.uniqs
+then
+  rm ${WD}/$1.uniqs
+fi
+
+test -r $1 || { echo "tf-idfcalc: cannot read file $1" 1>&2; 
+echo "Please check and try again" 1>&2; exit 1;}
+
+
+echo "Consulting $1" 1>&2;
+echo 1>&2;
+echo "Calculating how many documents each term occurs in" 1>&2;
+echo 1>&2;
+
+for i in `cat $1` 
+do
+  echo "Processing file $i" 1>&2;
+FNAME=`echo $i | awk -F/ '{print $NF}'`
+
+  tr -sc A-Za-z '\012' < $i | tr A-Z a-z |
+  sort | uniq > ${WD}/${FNAME}.uniq
+
+  echo ${WD}/${FNAME}.uniq >> ${WD}/$1.uniqs
+  echo "Done with file $i" 1>&2;
+  echo 1>&2;
+done
+
+echo "Sort-merging to find number of documents in which each term occurs" 1>&2;
+echo 1>&2;
+
+sort -m `cat ${WD}/$1.uniqs` | uniq -c > ${WD}/$1.docfreq
+
+for i in `cat ${WD}/$1.uniqs`
+do
+ rm $i
+done
+
+rm ${WD}/$1.uniqs
+
+echo "Calculating frequency of occurrence of each term in each document" 1>&2;
+echo 1>&2;
+
+for i in `cat $1`
+do
+
+FNAME=`echo $i | awk -F/ '{print $NF}'`
+
+tr -sc A-Za-z '\012' < $i | tr A-Z a-z |
+sort | uniq -c > ${WD}/${FNAME}.histi
+
+awk '
+    BEGIN{n=split(ARGV[1],a,"/");
+    NOM=substr(a[n],1,index(a[n],".")-1);}
+    {
+     printf "%s %d %s\n", NOM, $1, $2;
+    }' ${WD}/${FNAME}.histi  > ${WD}/${FNAME}.named
+
+done
+
+echo "Calculating number of documents in collection" 1>&2;
+echo 1>&2;
+
+n=`cat $1 | wc -w`
+
+echo "Calculating IDF for each term in collection" 1>&2;
+echo 1>&2;
+
+awk -v N="${n}" '
+#{printf "%s %f %s\n", "aaaaaaaa", (log(N)/log(2))-((log($1)/log(2))+1), $2;}
+{printf "%s %f %s\n", "aaaaaaaa", (log(N/$1)/log(10)), $2;}
+' ${WD}/$1.docfreq > ${WD}/$1.idf
+
+
+echo 1>&2;
+
+echo "Calculating ** tf-idf ** for each term in collection" 1>&2;
+echo 1>&2;
+
+sort -m -k 3 ${WD}/$1.idf ${WD}/*.named |
+
+awk '
+BEGIN {printf "%s\n\n", "tf-idf Results";
+printf "%s    %s\n", "Index Term", "document1:tf-idf, document2:tf-idf, ..."}
+$1 ~ "aaaaaaaa" { printf "\n%s:  ", $3; word = $3; idf = $2;}
+$1 !~ "aaaaaaaa" {printf "%s:%f ", $1, (1+log($2)) * idf}
+#$1 !~ "aaaaaaaa" {printf "%s:%f ", $1, $2 * idf}
+' > ${WD}/$1.weights
+
+echo "tf-idf results written to file ${WD}/$1.weights" 1>&2;
+echo 1>&2;
+
+rm ${WD}/$1.idf
+
+for i in `cat ./$1`
+do
+ FNOM=`echo $i | awk -F/ '{print $NF}'`
+rm ${WD}/$FNOM.named
+rm ${WD}/$FNOM.histi
+done
+
+rm ${WD}/$1.docfreq
+
+echo "program finished" 1>&2;
+echo 1>&2;
+
+
+
+

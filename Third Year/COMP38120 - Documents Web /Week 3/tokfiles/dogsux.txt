@@ -1,0 +1,63 @@
+[The following lines are extracts for the purposes of this exercise]
+
+PLoS One. 2013; 8(9): e74591. 
+Published online 2013 September 4. doi:  10.1371/journal.pone.0074591
+PMCID: PMC3762775
+Humans Process Dog and Human Facial Affect in Similar Ways
+Annett Schirmer,1,2,3,* Cui Shan Seow,1 and Trevor B. Penney1,3
+Marcel Brass, Editor
+1Department of Psychology, National University of Singapore, Singapore, 
+Singapore
+2Duke/NUS Graduate Medical School, Singapore, Singapore
+3LSI Neurobiology/Ageing Programme, National University of Singapore, 
+Singapore, Singapore
+Ghent University, Belgium
+*E-mail: schirmer@nus.edu.sg
+Abstract
+Humans share aspects of their facial affect with other species such as 
+dogs. Here we asked whether untrained human observers with and without dog 
+experience are sensitive to these aspects and recognize dog affect with 
+better-than-chance accuracy. Additionally, we explored similarities in the 
+way observers process dog and human expressions. The stimulus material 
+comprised naturalistic facial expressions of pet dogs and human infants 
+obtained through positive (i.e., play) and negative (i.e., social 
+isolation) provocation. Results extend existing work on cross-species 
+similarities in facial emotions and provide evidence that these 
+similarities are naturally exploited when humans interact with dogs.
+
+Dog expressions were collected from 33 dogs (Table 1) that visited a large 
+public dog run together with their owners. The dogs were videotaped using a 
+Canon HF 10 High Definition video recorder. In the positive condition, a 
+dog was presented with a piece of food or its favorite toy depending on 
+whether the owner reported the dog to be food or play motivated. This 
+condition derived from prior work demonstrating a link between reward, joy, 
+and motivation [26]. The baseline image was selected from the period before 
+the dog was exposed to the treat. The affective image was selected after 
+the owner initiated a movement to deliver the treat, but before the dog 
+received and consumed the treat. In the negative condition, the dog was 
+placed in a crate located in a deserted area of the dog run. This condition 
+was modeled on the finding that social separation produces sadness [20]. 
+The crate was 106 Lx71 Wx79 H cm in size and appropriate for all the dogs 
+used in this study (i.e., they could stand and move around in it 
+comfortably). The baseline image was taken while the dog owner was still 
+visible to the dog. The affective image was taken after the owner had left 
+and while the dog was showing known signs of distress (i.e., 
+whining/pawing, licking, heavy panting). The dog was left alone in the 
+crate for 5 minutes only.
+
+Visual inspection of the reaction time data suggested a comparable priming 
+effect for human and dog faces (Figure 2). Statistical analysis confirmed 
+this impression and revealed a significant Prime x Target interaction 
+(F(1,60) = 25.5, p<.0001) that was qualified by a three-way interaction 
+including Sex (F(1,60) = 5.5, p<.05), but not Species (p>.3). The Prime x 
+Target x Species x Dog Ownership interaction merely approached significance 
+(F(1,60) = 3.4, p = .07). An exploration of the Prime x Target interaction in 
+men was significant (F(1,30) = 4.3, p<.05). However, follow-up comparisons 
+were only marginally significant or non-significant for positive (F(1,30) = 
+3.7, p = .06) and negative primes (p>.2), respectively. An exploration of 
+the Prime x Target interaction in women was also significant (F(1,30) = 
+23.8, p<.0001; Figure 3). Additionally, women responded faster to positive 
+than to negative words following positive primes (F(1,30) = 9.3, p<.01) and 
+they responded faster to negative than to positive words following negative 
+primes (F(2,30) = 13.3, p<.001).
+

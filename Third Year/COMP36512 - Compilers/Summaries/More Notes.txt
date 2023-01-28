@@ -1,0 +1,167 @@
+--------------------------------------------------------------------------------
+                            Instruction Selection
+--------------------------------------------------------------------------------
+- Used for pattern matching
+- Local optimal choices/ Global is not optimal(NP-Complete)
+- Has a RISC-like target language
+
+Instruction Latency ~ The time from the instruction issue to the time
+                      results can be used
+
+Translation for different language constraints:
+1. Arithmetic Expressions
+      Post order walk of the expression tree
+      Instruction cost may be different
+      Tradeoff between register usage and speed
+      -> Load first then make operations -> less Cycles
+2. Array References
+    Row Major Order ~ layout of consecutive rows: A[1,1], A[1,2], A[1,3], etc.
+    Column Major Order ~ layout of consecutive columns: A[1,1], A[2,1], A[1,2], etc.
+
+--------------------------------------------------------------------------------
+                            Register Allocation
+--------------------------------------------------------------------------------
+~ The code makes use of unbounded number of virtual registers, but the machine
+  has a limited number of physical registers
+
+  2 Steps:
+  1. Register Allocation ~ choose which vars should use registers
+  2. Register Assignment ~ choose which register to assign to each vars from 1
+
+  Basic Block ~ Maximal length segment of straight-line code
+
+  Allocation - Local: for a Basic Block - Efficient algorithms exists for this one
+             - Global: an entire Procedure(multiple BB)
+
+  Liveness + Live Ranges
+  ~ The value of a variable is live from the declaration and its last usage.
+  ~ The range is called Live Range(we only allocate registers for live variables)
+
+  Theorem: M - maximum number of live variables/Instruction
+           k - number of physical registers
+           -------------------------------------------------
+           If M <= k ~ Allocation is trivial
+           Else some values have to be Spilled(store in memory and load later)
+
+  Top-Down Allocation - Local
+  ~ Compiler must reserve registers for Spilling -> f Registers(feasibility)
+  ~ Store in the k-f registers left/ The most frequent values in Basic Block
+
+  Algorithm
+  1. Count number of uses for each virtual register
+  2. Assign top k-f virtual register to physical register
+  3. Use reserve register for Spilling
+
+  Bottom-Up Allocation
+  ~ Allocate registers on demand/Free one when needed
+
+  Best's Algorithm
+  for each operation(nr1, nr2, nr3){
+    ensure nr1 is in R1
+    ensure nr2 is in R2
+    if R1 not needed after this -> Free R1
+    if R2 not needed after this -> Free R2
+    allocate R3 from nr3
+  }
+  Ensure ~ check is physical register is Free
+  Allocate ~ return a free register
+
+  Global Register Allocation
+  ~ modern compilers use graph colouring for global register Allocation
+
+  1. Construct Global live Ranges
+  2. Build Interference graph
+  3. Try construct k-Colouring on the graph(if not, choose value to spill)
+  4. Map colours to physical Registers
+
+  Interference Graph
+  ~ 2 values interfere when both are simultaneously live
+  Nodes = Values
+  Edges = Individual Interference
+
+  Top-Down Colouring
+  1. Rank nodes (Spill Cost)
+  2. Colour in the order of ranking
+    - If they cannot be coloured then spill or split the live range
+
+  Bottom-Up Colouring - Chaitin's Algorithm
+  1. Simplify the graph
+    - Pick node n < k
+    - Rename it from the graph
+    - Add it in the stack
+  2. If graph non-empty(n > k) use heuristic to choose a node to Spill
+      Go to Step 1 Or 2
+  3. Pop nodes from the graph and colour them
+
+  Build Global Live Ranges
+  ~ can be computed using IN/OUT constructs
+    IN[B] ~ set of live ranges at the entry in the Basic Block B
+    OUT[B] ~ live on exit from B
+  ~ We also need DEFb and USEb
+    USEb ~ vars used in B prior to any definitions of them
+    DEFb ~ vars defined in B prior to any use of them in B
+
+  Spill Cost
+  1. Address Computation ~ Minimise by keeping spilled vars in AR and use pointer + offset
+  2. Memory Operation ~ Unavoidable
+  3. Execution Frequency ~ High cost for vars in inner loops
+
+  Chaitin-Briggs Allocation
+  Screenshot*
+
+--------------------------------------------------------------------------------
+                            Instruction Scheduling
+--------------------------------------------------------------------------------
+~ Instructions take a number of cycles
+
+Idea -> Find the best scheduling of these instructions:
+          1. Correct
+          2. Fastest
+          3. Power Efficient
+          4. No wasted cycles
+          5. No spilling
+
+Basic Block Scheduling
+1. Build Data Dependency Graph
+2. Compute priority function for the graph nodes
+3. Use list scheduling to compute one cycle at a time
+    a. Use queue of ready operations
+    b. Update ready queue
+
+Priority function use heuristics
+
+List Scheduling - Try both and keep best result
+a. Forward: Start from available instruction
+b. Backwards: Start from leaf nodes
+
+--------------------------------------------------------------------------------
+                            Code Optimisation
+--------------------------------------------------------------------------------
+~ Optimise by preserving meaning at the expense of increase compile time
+
+Optimisation is done by series of tranformations
+
+Program -> Trans1 -> Trans2 -> ...... -> TrasnN
+
+Classifications
+1. By Scope
+  a. Local: Block Based
+  b. PeepHole: At a window of instructions
+  c. Loop-Level: one or more loops/nested
+  d. Global: An entire Procedure
+  e. Interprocedural: Across multiple procedures/whole program
+2. By Machine Information Used --> Machine Independent/Dependent
+3. By Effect On Program Structure --> Algebric/Reordering transformations
+
+Transformations
+1. Common Subexpression Elimination (Evaluate a re-emerging subexpression only once)
+2. Copy Propagation (After a 'copy' statement x=y, use y as fast as possible)
+3. Constant Propagation (Replace variable with constant values with these values)
+4. Constant Folding (Deduce a variable is constant, then use constant)
+5. Dead-Code Elimination (Value computed but never used)
+6. Reduction in Strength (Replace x/4.0 with X*0.25)
+
+Loop Transformations
+1. Loop Invariant Code-Motion (Move operands outside the loop)
+2. Loop Interchange (Interchange order of loops in nested one)
+3. Strip Mining (+ Loop Interchange = Improve Cache)

@@ -1,0 +1,85 @@
+#!/bin/sh
+
+# given an input file formatted as follows:
+# word: file1:idf file2:idf file3:idf ...
+# this program re-sorts the input to yield a sort ordered by the name of
+# the file given as its only argument:
+# Sample command: fpick flist2.weights file3
+# output: word file3:idf file1:idf file2:idf
+# Where word does not occur in (here) file3, output will be: file3:0.000000
+# Where word only occurs in (here) file3, there will be no output (as the goal is comparison)
+# The result is then sorted into descending frequency order by the idf
+# part of field 2 (i.e. here file3:idf).
+
+# Uses <filename>.weights file produced by tf-idfcalc
+
+# Sort weighted Inverse Document Frequency for a collection of documents
+
+echo 1>&2;
+echo 'This program sorts Weighted Inverse Document Frequencies for' 1>&2;
+echo 'index terms in a collection of documents.' 1>&2;
+echo 1>&2;
+echo 'This program requires two arguments:' 1>&2;
+echo 'arg1: the (complete pathname) filename for the relevant tdf-idf weights file' 1>&2;
+echo 'arg2: the (single word) filename whose index terms you wish to compare against others.' 1>&2;
+echo 1>&2;
+
+
+if (( $# != 2 ))
+then
+  echo "fpick: not enough arguments" 1>&2; echo "Please check and try again" 1>&2; exit 1;
+fi
+
+test -r $1 || { echo "fpick: no such file $1" 1>&2; echo "Please check and try again" 1>&2; exit 1;}
+
+echo $2 > /tmp/XlookX;		# set up name of file whose IDF values
+				# are to be seen in the first IDF column
+				# of the output
+cat /tmp/XlookX $1 |
+gawk '
+NR <= 5 && NF == 1 {fname=$1""; next;}	# pick up filename
+NR <= 5 {next;}	# skip header lines
+#NR <= 5 && NF != 0 {next;}	# skip header lines
+NR > 5 && NF > 2 { split($1,one,":"); printf("\n%-20s", one[1]); # normal case
+found=0;
+for (i=2; i<=NF; i++)
+  {
+    split($i,a,":");
+    if (a[1] == fname)
+    {
+      found=1;
+      printf(" %10s:%.6f:",a[1],a[2]);   # delimit value for later use as sort key
+    }
+    else {rest[a[1]] = a[2];}
+  }
+    if (found==0) { printf(" %10s:00.0000:", fname); }  # no value, but 
+						       # need a sort key
+    for (var in rest)
+    {
+      printf(" %10s<%.6f>",var,rest[var]);  # non sort keys so indicated
+    }
+    delete rest;
+}
+
+' |  sort  -t : -k 2,2nr | gawk '
+BEGIN{ printf "%s\n\n", "Weighted IDF Results";
+printf "%-20s  %s\n\n", "Index Term", "document1:WIDF   document2:WIDF, ..."}
+{
+$2=gensub(":","",2,$2);  # remove now spurious :,  < and >
+gsub("<",":");
+gsub(">","");
+printf("%-20s %s", $1, $2);
+for (i=3;i<=NF;i++)
+ printf(" %s", $i);
+printf("\n");}' 
+
+#> $1.weights
+
+
+#echo "Sorted weighted IDFs written to file $1.weights" 1>&2;
+#echo 1>&2;
+
+rm /tmp/XlookX;
+echo "Program finished" 1>&2;
+echo 1>&2;
+
